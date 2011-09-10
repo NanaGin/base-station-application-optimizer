@@ -1,7 +1,7 @@
 # imports
 source configuration.tcl
 source createTopology.tcl
-
+source createTraffic.tcl
 
 # in case commande line parameters were provided, override default values from configuration.tcl file
 foreach { key value } $argv {
@@ -13,6 +13,7 @@ foreach { key value } $argv {
 		-bw  { set cfg_(DROP_TAIL_BW) $value }
 		-dl  { set cfg_(DROP_TAIL_DELAY) $value }
 		-qs   { set cfg_(QUEUE_SIZE) $value }
+		-cache { set cfg_(CACHE) $value }
 
 	}
 }
@@ -26,6 +27,8 @@ set ns [new Simulator]
 #Open the trace file
 set f [open out.tr w]
 $ns trace-all $f
+set httpLog [open "http.log" w]
+
 
 #Open the nam trace file 
 set nf [open out.nam w]
@@ -37,23 +40,21 @@ puts "Trace files opened..."
 # create Topology - createTopology uses the file produced by iitialTopology
 createTopology
 
-
+# if we are in scenario with cache
+if {$cfg_(CACHE) == true} { 
+	setUpENBCache 
+}
 
  #   3. traffic generation:
 
 
   #  for traffic generation we have the following options:
-   # 1. EXPOO_Traffic—generates traffic according to an Exponential On/Off distribution. Packets are sent at a fixed rate
-    #during on periods, and no packets are sent during off periods. Both on and off periods are taken from an exponential
-   # distribution. Packets are constant size.
    # 2. POO_Traffic—generates traffic according to a Pareto On/Off distribution. This is identical to the Exponential
    # On/Off distribution, except the on and off periods are taken from a pareto distribution. These sources can be used to
    # generate aggregate traffic that exhibits long range dependency.
    # 3. CBR_Traffic—generates traffic according to a deterministic rate. Packets are constant size. Optionally, some
    # randomizing dither can be enabled on the interpacket departure intervals.
-   # 4. TrafficTrace—generates traffic according to a trace file. Each record in the trace file consists of 2 32-bit fields in
-   # network (big-endian) byte order. The first contains the time in microseconds until the next packet is generated. The
-   # second contains the length in bytes of the next packet.
+
  
 # for web, video and file sharing we shoud use pareto
 # for vop and voice we should use cbr

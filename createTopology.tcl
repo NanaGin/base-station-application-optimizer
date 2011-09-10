@@ -4,6 +4,7 @@
 proc createTopology {} {
 	global ns node cfg_
 	
+	global eNB SGW GGW server
 	# define topology
 	global topology
 	set topology    [new Topography]
@@ -59,6 +60,13 @@ proc createTopology {} {
 }
 
 
+# in case we are in Cache scenario , setup a cache on eNB
+proc setUpENBCache {} {
+	global ns cfg_ eNB httpLog
+	set cache [new Http/Cache $ns $eNB]
+	$cache log $httpLog
+}
+
 
 proc defineWiredNode {} {
 	# define wired node
@@ -70,12 +78,14 @@ proc defineWiredNode {} {
 			-antType $cfg_(ANTENA_TYPE) \
 			-propType $cfg_(PROPAGATION_TYPE) \
 			-phyType $cfg_(PHYSICAL_TYPE) \
+			-channel $cfg_(CHANNEL_WIRED) \
 			-topoInstance $topology \
 			-agentTrace ON \
 			-routerTrace ON \
 			-macTrace ON \
 			-movementTrace OFF
 }
+
 
 proc defineWirelessNode {} {
 	# define wireless node

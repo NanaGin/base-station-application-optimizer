@@ -11,6 +11,10 @@ set cfg_(TOPOLOGY_X) 5000
 set cfg_(TOPOLOGY_Y) 5000
 set cfg_(TOPOLOGY_FILE) topology.tcl
 
+# the defaut scenario is without a cache
+set cfg_(CACHE) false
+
+
 # nodes configuration - wired / wireless
 
 set cfg_(LL_TYPE) LL
