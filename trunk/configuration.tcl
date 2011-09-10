@@ -15,6 +15,42 @@ set cfg_(TOPOLOGY_FILE) topology.tcl
 set cfg_(CACHE) false
 
 
+# traffic parameters
+
+# usage distribution
+set cfg_(WEB) 26
+set cfg_(VIDEO) 37
+set cfg_(FILES) 30
+set cfg_(VOIP) 7
+
+# web params
+set cfg_(WEB_BURST_TIME) 210
+set cfg_(WEB_IDLE_TIME) 500ms
+set cfg_(WEB_RATE) 200k
+set cfg_(WEB_PACKET_SIZE) 0.5mb
+set cfg_(WEB_SHAPE) 1.1
+
+# video params
+set cfg_(VIDEO_BURST_TIME) 500ms
+set cfg_(VIDEO_IDLE_TIME) 500ms
+set cfg_(VIDEO_RATE) 200k
+set cfg_(VIDEO_PACKET_SIZE) 210
+set cfg_(VIDEO_SHAPE) 1.5
+
+# files params
+set cfg_(FILES_BURST_TIME) 500ms
+set cfg_(FILES_IDLE_TIME) 500ms
+set cfg_(FILES_RATE) 200k
+set cfg_(FILES_PACKET_SIZE) 210
+set cfg_(FILES_SHAPE) 1.5
+
+# voip params
+set cfg_(VOIP_MAX_PACKETS) 500
+set cfg_(VOIP_RANDOM) off
+set cfg_(VOIP_PACKET_SIZE) 210
+set cfg_(VOIP_RATE) 1.5
+set cfg_(VOIP_INTERVAL) 1.5
+
 # nodes configuration - wired / wireless
 
 set cfg_(LL_TYPE) LL
@@ -25,13 +61,8 @@ set cfg_(DROP_TAIL) DropTail
 set cfg_(PHYSICAL_TYPE) Phy/Sat
 set cfg_(PHYSICAL_WIRELESS_TYPE) Phy/WirelessPhy
 set cfg_(ANTENA_TYPE) Antenna/OmniAntenna
-#set cfg_(ENERGY_MODEL) 
-#set cfg_(INIT_ENERGY)
-#set cfg_(RX_POWER)
-#set cfg_(TX_POWER)
 set cfg_(CHANNEL_WIRELESS) Channel/WirelessChannel
 set cfg_(CHANNEL_WIRED) Channel/Sat 
-
 
 
 

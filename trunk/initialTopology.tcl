@@ -21,7 +21,7 @@ if { $argc != 4 } {
 		puts $topo "\$UE($i) set X_ $randX"
 		puts $topo "\$UE($i) set Y_ $randY"
 		puts $topo "\$UE($i) set Z_ 0.0"
-		puts $topo "\$ns initial_node_pos \$UE($i) 30"
+		#puts $topo "\$ns initial_node_pos \$UE($i) 30"
     }
    close $topo
 }
