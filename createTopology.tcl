@@ -2,7 +2,7 @@
 
 
 proc createTopology {} {
-	global ns node cfg_
+	global ns node cfg_ UE
 	
 	global eNB SGW GGW server
 	# define topology
@@ -23,7 +23,8 @@ proc createTopology {} {
 	set server [$ns node];#node id is 3	
 	$ns at 0.0 "$server label server"  
 
-	#defineWirelessNode
+
+	defineWirelessNode
 	# create nodes
 	for { set i 0} {$i<$cfg_(NUM_OF_CLIENTS)} {incr i} {
 		set UE($i) [$ns node]
@@ -32,18 +33,16 @@ proc createTopology {} {
 	
 	# load nodes locations - randomized
 	# uses TOPOLOGY_FILE from configuration file, unless provided as input argument to main.tcl
-	source $cfg_(TOPOLOGY_FILE)
+	#source $cfg_(TOPOLOGY_FILE)
 
 	# step 2: define the links to connect the nodes
 	for { set i 0} {$i<$cfg_(NUM_OF_CLIENTS)} {incr i} {
-		$ns simplex-link $UE($i) $eNB $cfg_(DROP_TAIL_BW) $cfg_(DROP_TAIL_DELAY) $cfg_(DROP_TAIL) 
-		$ns simplex-link $eNB $UE($i) $cfg_(DROP_TAIL_BW) $cfg_(DROP_TAIL_DELAY) $cfg_(DROP_TAIL)  
+		$ns duplex-link $UE($i) $eNB $cfg_(DROP_TAIL_BW) $cfg_(DROP_TAIL_DELAY) $cfg_(DROP_TAIL)		
 		#set queue limit_
 		$ns queue-limit $UE($i) $eNB $cfg_(QUEUE_SIZE)
 	}
 
 
-	# The bandwidth between GGW and server is not the bottleneck, so we use DropTail
 	$ns duplex-link $eNB $SGW $cfg_(DROP_TAIL_BW) $cfg_(DROP_TAIL_DELAY) $cfg_(DROP_TAIL) 
 	$ns duplex-link-op $eNB $SGW  orient right 
 	$ns queue-limit $eNB $SGW $cfg_(QUEUE_SIZE)	
@@ -64,7 +63,7 @@ proc createTopology {} {
 proc setUpENBCache {} {
 	global ns cfg_ eNB httpLog
 	set cache [new Http/Cache $ns $eNB]
-	$cache log $httpLog
+	$cache log $httpLog	
 }
 
 

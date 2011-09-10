@@ -2,6 +2,7 @@
 source configuration.tcl
 source createTopology.tcl
 source createTraffic.tcl
+source utilities.tcl
 
 # in case commande line parameters were provided, override default values from configuration.tcl file
 foreach { key value } $argv {
@@ -37,7 +38,7 @@ $ns namtrace-all $nf
 puts "Trace files opened..."
 
 
-# create Topology - createTopology uses the file produced by iitialTopology
+# create Topology - createTopology uses the file produced by initialTopology
 createTopology
 
 # if we are in scenario with cache
@@ -45,89 +46,56 @@ if {$cfg_(CACHE) == true} {
 	setUpENBCache 
 }
 
- #   3. traffic generation:
+#   define colors for better presentation
+defineColors
 
 
-  #  for traffic generation we have the following options:
-   # 2. POO_Traffic—generates traffic according to a Pareto On/Off distribution. This is identical to the Exponential
-   # On/Off distribution, except the on and off periods are taken from a pareto distribution. These sources can be used to
-   # generate aggregate traffic that exhibits long range dependency.
-   # 3. CBR_Traffic—generates traffic according to a deterministic rate. Packets are constant size. Optionally, some
-   # randomizing dither can be enabled on the interpacket departure intervals.
+# define number of users per traffic channel according to Alot distribution
+calculateUsersDistribution
 
- 
-# for web, video and file sharing we shoud use pareto
-# for vop and voice we should use cbr
 
-#########################################
+# define web users
+set startIndex 0
+set first 0
+set last [expr {$first+$WEB_USERS}]
+for { set i $first} { $i<$last } {incr i} {
+   puts "web: $i"	
+   set paretoWebServer($i) [createParetoFlow $ns $server $UE($i) 210 500ms 500ms 0.5mb 1.1 1]
+   set paretoWebClient($i) [createParetoFlow $ns $UE($i) $server 210 500ms 500ms 0.5mb 1.1 1]
+   $ns at 0.0 "$paretoWebServer($i) start" 
+   $ns at 0.0 "$paretoWebClient($i) start"			
+}
+# define video users
+set first $last
+set last [expr {$last+$VIDEO_USERS}]
+for { set i $first} { $i<$last } {incr i} {
+   puts "videp: $i"	
+   set paretoVideoServer($i) [createParetoFlow $ns $server $UE($i) 210 500ms 500ms 0.5mb 1.1 2]
+   set paretoVideoClient($i) [createParetoFlow $ns $UE($i) $server 210 500ms 500ms 0.5mb 1.1 2]
+   $ns at 0.0 "$paretoVideoServer($i) start" 
+   $ns at 0.0 "$paretoVideoClient($i) start"	 			
+}
+# define files users
+set first $last
+set last [expr {$last+$FILES_USERS}]
+for { set i $first} { $i<$last } {incr i} {
+    puts "files: $i"	
+    set paretoFilesServer($i) [createParetoFlow $ns $server $UE($i) 210 500ms 500ms 0.5mb 1.1 3]
+    set paretoFilesClient($i) [createParetoFlow $ns $UE($i) $server 210 500ms 500ms 0.5mb 1.1 3]
+    $ns at 0.0 "$paretoFilesServer($i) start"
+    $ns at 0.0 "$paretoFilesClient($i) start" 				 				
+}
+# define voip users
+set first $last
+set last [expr {$last+$VOIP_USERS}]
+for { set i $first} { $i<$last } {incr i} {
+    puts "voip: $i"
+   set cbrVoipServer($i) [createCbrFlow $ns $server $UE($i) 210 0.25mb 5]
+   set cbrVoipClient($i) [createCbrFlow $ns $UE($i) $server 210 0.25mb 5]
+   $ns at 0.0 "$cbrVoipServer($i) start"
+   $ns at 0.0 "$cbrVoipClient($i) start" 			 			
+}
 
-#Create a UDP agent and attach it to node n0
-#set udp0 [new Agent/UDP]
-#$ns attach-agent $n0 $udp0
-#$udp0 set class_ 0
-
-#Create a traffic sink and attach it to node n3
-#set null0 [new Agent/Null]
-#$ns attach-agent $n3 $null0
-
-#$ns connect $udp0 $null0
-
-#Create a CBR traffic source and attach it to udp0
-#set cbr0 [new Application/Traffic/CBR]
-#$cbr0 attach-agent $udp0
-
-#$ns at 1.0 "$cbr0 start"
-
-#puts "CBR traffic flow over UDP connection between nodes 0 and 3..." 
-#puts "CBR traffic starts at time 1.0 sec..."
-#########################################
-
-#Create a UDP agent and attach it to node n3
-#set udp1 [new Agent/UDP]
-#$ns attach-agent $n3 $udp1
-#$udp1 set class_ 1
-
-#Create a traffic sink and attach it to node n1
-#set null1 [new Agent/Null]
-#$ns attach-agent $n1 $null1
-
-#$ns connect $udp1 $null1
-
-#Create a CBR traffic source and attach it to udp1
-#set cbr1 [new Application/Traffic/CBR]
-#$cbr1 attach-agent $udp1
-
-#$ns at 1.1 "$cbr1 start"
-
-#puts "CBR traffic flow over UDP connection between nodes 3 and 1..." 
-#puts "CBR traffic starts at time 1.1 sec..."
-#########################################
-
-#Create a TCP agent
-#set tcp [new Agent/TCP]
-#$tcp set class_ 2
-
-#Create a TCP sink
-#set sink [new Agent/TCPSink]
-
-#TCP connection from node n0 to node n3
-#$ns attach-agent $n0 $tcp
-#$ns attach-agent $n3 $sink
-#$ns connect $tcp $sink
-
-#Create an ftp traffic source
-##set ftp [new Application/FTP]
-#$ftp attach-agent $tcp
-
-#Start the ftp session at 1.2 sec
-#$ns at 1.2 "$ftp start"
-
-#Stop the ftp session at 1.35 sec
-#$ns at 1.35 "$ns detach-agent $n0 $tcp ; $ns detach-agent $n3 $sink"
-
-#puts "ftp traffic flow over TCP connection between nodes 0 and 3..." 
-#puts "ftp traffic starts at time 1.2 sec and finishes at time 1.35 sec..." 
-#########################################
 
 #Finish the simulation at 3.0 sec
 $ns at 3.0 "finish"
@@ -142,5 +110,9 @@ proc finish {} {
 }
 #
 $ns run
+
+
+
+
 
 
