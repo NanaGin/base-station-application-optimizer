@@ -29,43 +29,43 @@
 
 
 # format: set pareto($k) [createParetoFlow ns src dst burst size idle rate shape color]
-proc createParetoFlow {ns src dst burst size idle rate shape fid} {
+proc createParetoFlow {ns src dst burst size idle rate shape fid i} {
 	#Setup a UDP connection 
-	set udp [new Agent/UDP] 
-	$ns attach-agent $src $udp 
-	set null [new Agent/Null] 
-	$ns attach-agent $dst $null 
-	$ns connect $udp $null 
-	$udp set fid_ $fid 
+	set udp($i) [new Agent/UDP] 
+	$ns attach-agent $src $udp($i)
+	set null($i) [new Agent/Null] 
+	$ns attach-agent $dst $null($i) 
+	$ns connect $udp($i) $null($i) 
+	$udp($i)  set fid_ $fid 
 	
 	#Setup a Pareto ON/OFF traffic  session over UDP connection 
-	set p [new Application/Traffic/Pareto] 
-	$p attach-agent $udp 
-	$p set packet_size_ $size 
-	$p set burst_time_ $burst
-	$p set idle_time_ $idle
-	$p set rate_ $rate
-	$p set shape_ $shape
-	return $p
+	set p($i) [new Application/Traffic/Pareto] 
+	$p($i) attach-agent $udp($i)
+	$p($i) set packet_size_ $size 
+	$p($i) set burst_time_ $burst
+	$p($i) set idle_time_ $idle
+	$p($i) set rate_ $rate
+	$p($i) set shape_ $shape
+	return $p($i)
 }
 
-# format: set cbr($k) [createCbrFlow ns src dst size rate color]
-proc createCbrFlow {ns src dst size rate fid} {
+# format: set cbr($k) [createCbrFlow ns src dst size rate color i]
+proc createCbrFlow {ns src dst size rate fid i} {
 	#Setup a UDP connection 
-	set udp [new Agent/UDP] 
-	$ns attach-agent $src $udp 
-	set null [new Agent/Null] 
-	$ns attach-agent $dst $null 
-	$ns connect $udp $null 
-	$udp set fid_ $fid 
+	set udp($i) [new Agent/UDP]
+	$udp($i) set class_ 1 
+	$ns attach-agent $src $udp($i) 
+	set null($i) [new Agent/Null] 
+	$ns attach-agent $dst $null($i) 
+	$ns connect $udp($i) $null($i) 
+	$udp($i) set fid_ $fid 
 
 	#Setup a CBR traffic session over UDP connection 
-	set c [new Application/Traffic/CBR] 
-	$c attach-agent $udp 
-	$c set type_ CBR 
-	$c set packet_size_ $size 
-	$c set rate_ $rate 
-	$c set random_ false 
-
-	return $c
+	set c($i) [new Application/Traffic/CBR] 
+	$c($i) attach-agent $udp($i)
+	$c($i) set type_ CBR 
+	$c($i) set packet_size_ $size 
+	$c($i) set rate_ $rate 
+	$c($i) set random_ false
+	return $c($i) 
 }
