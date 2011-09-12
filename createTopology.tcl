@@ -44,13 +44,13 @@ proc createTopology {} {
 
 
 	$ns duplex-link $eNB $SGW $cfg_(DROP_TAIL_BW) $cfg_(DROP_TAIL_DELAY) $cfg_(DROP_TAIL) 
-	$ns duplex-link-op $eNB $SGW  orient right 
+	#$ns duplex-link-op $eNB $SGW  orient right 
 	$ns queue-limit $eNB $SGW $cfg_(QUEUE_SIZE)	
 	$ns duplex-link $SGW $GGW $cfg_(DROP_TAIL_BW) $cfg_(DROP_TAIL_DELAY) $cfg_(DROP_TAIL) 
-	$ns duplex-link-op $SGW $GGW orient right 
+	#$ns duplex-link-op $SGW $GGW orient right 
 	$ns queue-limit $SGW $GGW $cfg_(QUEUE_SIZE)
 	$ns duplex-link $GGW $server $cfg_(DROP_TAIL_BW) $cfg_(DROP_TAIL_DELAY) $cfg_(DROP_TAIL) 
-	$ns duplex-link-op $GGW $server orient right 
+	#$ns duplex-link-op $GGW $server orient right 
 	$ns queue-limit $GGW $server $cfg_(QUEUE_SIZE)
 
 

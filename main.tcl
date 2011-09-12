@@ -29,7 +29,8 @@ set ns [new Simulator]
 set f [open out.tr w]
 $ns trace-all $f
 set httpLog [open "http.log" w]
-
+#add-packet-header IP UDP;
+#Trace set show_tcphdr_ 1;
 
 #Open the nam trace file 
 set nf [open out.nam w]
@@ -60,8 +61,8 @@ set first 0
 set last [expr {$first+$WEB_USERS}]
 for { set i $first} { $i<$last } {incr i} {
    puts "web: $i"	
-   set paretoWebServer($i) [createParetoFlow $ns $server $UE($i) 210 500ms 500ms 0.5mb 1.1 1]
-   set paretoWebClient($i) [createParetoFlow $ns $UE($i) $server 210 500ms 500ms 0.5mb 1.1 1]
+   set paretoWebServer($i) [createParetoFlow $ns $server $UE($i) 210 510ms 500ms 0.5mb 1.1 1 $i]
+   set paretoWebClient($i) [createParetoFlow $ns $UE($i) $server 210 510ms 500ms 0.5mb 1.1 1 $i]
    $ns at 0.0 "$paretoWebServer($i) start" 
    $ns at 0.0 "$paretoWebClient($i) start"			
 }
@@ -70,8 +71,8 @@ set first $last
 set last [expr {$last+$VIDEO_USERS}]
 for { set i $first} { $i<$last } {incr i} {
    puts "videp: $i"	
-   set paretoVideoServer($i) [createParetoFlow $ns $server $UE($i) 210 500ms 500ms 0.5mb 1.1 2]
-   set paretoVideoClient($i) [createParetoFlow $ns $UE($i) $server 210 500ms 500ms 0.5mb 1.1 2]
+   set paretoVideoServer($i) [createParetoFlow $ns $server $UE($i) 210 1000ms 500ms 0.5mb 1.1 2 $i]
+   set paretoVideoClient($i) [createParetoFlow $ns $UE($i) $server 210 1000ms 500ms 0.5mb 1.1 2 $i]
    $ns at 0.0 "$paretoVideoServer($i) start" 
    $ns at 0.0 "$paretoVideoClient($i) start"	 			
 }
@@ -80,8 +81,8 @@ set first $last
 set last [expr {$last+$FILES_USERS}]
 for { set i $first} { $i<$last } {incr i} {
     puts "files: $i"	
-    set paretoFilesServer($i) [createParetoFlow $ns $server $UE($i) 210 500ms 500ms 0.5mb 1.1 3]
-    set paretoFilesClient($i) [createParetoFlow $ns $UE($i) $server 210 500ms 500ms 0.5mb 1.1 3]
+    set paretoFilesServer($i) [createParetoFlow $ns $server $UE($i) 210 500ms 500ms 0.5mb 1.1 3 $i]
+    set paretoFilesClient($i) [createParetoFlow $ns $UE($i) $server 210 500ms 500ms 0.5mb 1.1 3 $i]
     $ns at 0.0 "$paretoFilesServer($i) start"
     $ns at 0.0 "$paretoFilesClient($i) start" 				 				
 }
@@ -90,8 +91,8 @@ set first $last
 set last [expr {$last+$VOIP_USERS}]
 for { set i $first} { $i<$last } {incr i} {
     puts "voip: $i"
-   set cbrVoipServer($i) [createCbrFlow $ns $server $UE($i) 210 0.25mb 5]
-   set cbrVoipClient($i) [createCbrFlow $ns $UE($i) $server 210 0.25mb 5]
+   set cbrVoipServer($i) [createCbrFlow $ns $server $UE($i) 210 0.25mb 5 $i]
+   set cbrVoipClient($i) [createCbrFlow $ns $UE($i) $server 210 0.25mb 5 $i]
    $ns at 0.0 "$cbrVoipServer($i) start"
    $ns at 0.0 "$cbrVoipClient($i) start" 			 			
 }
