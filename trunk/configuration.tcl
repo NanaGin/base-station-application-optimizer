@@ -6,10 +6,9 @@ global cfg_
 set cfg_(NUM_OF_CLIENTS) 10
 set cfg_(DROP_TAIL_BW) 10Mb
 set cfg_(DROP_TAIL_DELAY) 10ms
-set cfg_(QUEUE_SIZE) 100
+set cfg_(QUEUE_SIZE) 10
 set cfg_(TOPOLOGY_X) 5000
 set cfg_(TOPOLOGY_Y) 5000
-set cfg_(TOPOLOGY_FILE) topology.tcl
 
 # the defaut scenario is without a cache
 set cfg_(CACHE) false
@@ -24,32 +23,32 @@ set cfg_(FILES) 30
 set cfg_(VOIP) 7
 
 # web params
-set cfg_(WEB_BURST_TIME) 210
-set cfg_(WEB_IDLE_TIME) 500ms
-set cfg_(WEB_RATE) 200k
-set cfg_(WEB_PACKET_SIZE) 0.5mb
-set cfg_(WEB_SHAPE) 1.1
+set cfg_(WEB_BURST_TIME) 200ms
+set cfg_(WEB_IDLE_TIME) 2000ms
+set cfg_(WEB_RATE) 300Kb
+set cfg_(WEB_PACKET_SIZE) 210
+set cfg_(WEB_SHAPE) 1.3
 
 # video params
-set cfg_(VIDEO_BURST_TIME) 500ms
-set cfg_(VIDEO_IDLE_TIME) 500ms
-set cfg_(VIDEO_RATE) 200k
+set cfg_(VIDEO_BURST_TIME) 2000ms
+set cfg_(VIDEO_IDLE_TIME) 2000ms
+set cfg_(VIDEO_RATE) 600Kb
 set cfg_(VIDEO_PACKET_SIZE) 210
 set cfg_(VIDEO_SHAPE) 1.5
 
 # files params
-set cfg_(FILES_BURST_TIME) 500ms
-set cfg_(FILES_IDLE_TIME) 500ms
-set cfg_(FILES_RATE) 200k
+set cfg_(FILES_BURST_TIME) 2000ms
+set cfg_(FILES_IDLE_TIME) 200ms
+set cfg_(FILES_RATE) 100Kb
 set cfg_(FILES_PACKET_SIZE) 210
-set cfg_(FILES_SHAPE) 1.5
+set cfg_(FILES_SHAPE) 1.7
 
 # voip params
-set cfg_(VOIP_MAX_PACKETS) 500
+set cfg_(VOIP_MAX_PACKETS) 50000
 set cfg_(VOIP_RANDOM) off
 set cfg_(VOIP_PACKET_SIZE) 210
-set cfg_(VOIP_RATE) 1.5
-set cfg_(VOIP_INTERVAL) 1.5
+set cfg_(VOIP_RATE) 1.5Kb
+set cfg_(VOIP_INTERVAL) 0.005ms
 
 # nodes configuration - wired / wireless
 
