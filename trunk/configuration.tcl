@@ -2,7 +2,10 @@
 # global variables
 global cfg_  
 
-# topology configurations, can be overwritten by command-line options
+# simulation time
+set cfg_(SIMULATION_TIME) 10.0
+
+
 set cfg_(NUM_OF_CLIENTS) 10
 set cfg_(DROP_TAIL_BW) 10Mb
 set cfg_(DROP_TAIL_DELAY) 10ms
@@ -22,33 +25,37 @@ set cfg_(VIDEO) 37
 set cfg_(FILES) 30
 set cfg_(VOIP) 7
 
+# cache parameters - hit rate per traffic
+set cfg_(WEB_HIT_RATE) 20
+set cfg_(VIDEO_HIT_RATE) 40
+set cfg_(FILES_HIT_RATE) 40
+
+
 # web params
 set cfg_(WEB_BURST_TIME) 200ms
 set cfg_(WEB_IDLE_TIME) 2000ms
 set cfg_(WEB_RATE) 300Kb
-set cfg_(WEB_PACKET_SIZE) 210
+set cfg_(WEB_PACKET_SIZE) 1040
 set cfg_(WEB_SHAPE) 1.3
 
 # video params
 set cfg_(VIDEO_BURST_TIME) 2000ms
 set cfg_(VIDEO_IDLE_TIME) 2000ms
 set cfg_(VIDEO_RATE) 600Kb
-set cfg_(VIDEO_PACKET_SIZE) 210
+set cfg_(VIDEO_PACKET_SIZE) 500
 set cfg_(VIDEO_SHAPE) 1.5
 
 # files params
 set cfg_(FILES_BURST_TIME) 2000ms
 set cfg_(FILES_IDLE_TIME) 200ms
 set cfg_(FILES_RATE) 100Kb
-set cfg_(FILES_PACKET_SIZE) 210
+set cfg_(FILES_PACKET_SIZE) 1600
 set cfg_(FILES_SHAPE) 1.7
 
 # voip params
-set cfg_(VOIP_MAX_PACKETS) 50000
-set cfg_(VOIP_RANDOM) off
-set cfg_(VOIP_PACKET_SIZE) 210
-set cfg_(VOIP_RATE) 1.5Kb
-set cfg_(VOIP_INTERVAL) 0.005ms
+set cfg_(VOIP_PACKET_SIZE) 200
+set cfg_(VOIP_RATE) 64Kb
+
 
 # nodes configuration - wired / wireless
 
