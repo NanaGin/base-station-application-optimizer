@@ -1,5 +1,15 @@
 
 
+# this procedure calculates the numbers of users that should use cache 
+# according to the traffic distribution and cache hit rate
+proc calculateHitRateUsersDistribution {} {
+	global cfg_ WEB_USERS VIDEO_USERS FILES_USERS WEB_CACHE_USERS VIDEO_CACHE_USERS FILES_CACHE_USERS
+	set WEB_CACHE_USERS [expr {ceil($WEB_USERS*$cfg_(WEB_HIT_RATE)/100.0)}]
+	set VIDEO_CACHE_USERS [expr {ceil($VIDEO_USERS*$cfg_(VIDEO_HIT_RATE)/100.0)}]
+	set FILES_CACHE_USERS [expr {ceil($FILES_USERS*$cfg_(FILES_HIT_RATE)/100.0)}]
+}
+
+
 # this procedure divides users according to the distribution from configuration.tcl
 # 1. divides all "whole" users - results of percentage calculations
 # 2. sums up all remainders from the division
@@ -55,16 +65,20 @@ proc calculateUsersDistribution {} {
 }
 
 proc defineColors {} {
- global ns
- # colors
- # used for web
- $ns color 1 Blue   
- # used for video
- $ns color 2 green  
- # used for cbr
- $ns color 3 Red   
- $ns color 4 purple 
- # used for files
- $ns color 5 orange  
- $ns color 6 yellow 
+	global ns
+	# colors
+	# used for web cache
+	$ns color 1 Blue   
+	# used for web no cache
+	$ns color 2 green  
+	# used for video cache
+	$ns color 3 Red
+	# user for video no cache  
+	$ns color 4 purple 
+	# used for files cache
+	$ns color 5 orange  
+	# used for files no cache
+	$ns color 6 yellow 
+	# user for cbr
+	$ns color 7  pink
 }

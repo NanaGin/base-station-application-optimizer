@@ -6,10 +6,8 @@ source utilities.tcl
 
 # in case commande line parameters were provided, override default values from configuration.tcl file
 foreach { key value } $argv {
-	switch -- $key {
+	switch -- $key {	
 		-nn   { set cfg_(NUM_OF_CLIENTS) $value }
-		-topX   { set cfg_(TOPOLOGY_X) $value }
-		-topY   { set cfg_(TOPOLOGY_Y) $value }
 		-bw  { set cfg_(DROP_TAIL_BW) $value }
 		-dl  { set cfg_(DROP_TAIL_DELAY) $value }
 		-qs   { set cfg_(QUEUE_SIZE) $value }
@@ -18,6 +16,9 @@ foreach { key value } $argv {
 		-videoUsers { set cfg_(VIDEO) $value } 
 		-filesUsers { set cfg_(FILES) $value } 
 		-voipUsers { set cfg_(VOIP) $value }  
+		-webHitRate { set cfg_(WEB_HIT_RATE) $value }
+		-videoHitRate { set cfg_(VIDEO_HIT_RATE) $value }
+		-filesHitRate { set cfg_(FILES_HIT_RATE) $value }
 	}
 }
 
@@ -44,56 +45,98 @@ puts "Trace files opened..."
 # create Topology - createTopology uses the file produced by initialTopology
 createTopology
 
-# if we are in scenario with cache
-if {$cfg_(CACHE) == true} { 
-	setUpENBCache 
-}
-
-#   define colors for better presentation
+# define colors for better presentation. the numbers represent botht the color in graphical simulation and the flow id in traces
 defineColors
 
 
 # define number of users per traffic channel according to Alot distribution
 calculateUsersDistribution
 
+# calculate the distribution of users that will receive cache hit - meaning their traffic will be only until eNB. will be used only in cache scenario
+calculateHitRateUsersDistribution 
+
+
+puts "-------------------------------------"
+puts "Users Distribution:"
+puts "Web cache: $WEB_CACHE_USERS"
+puts "Web total: $WEB_USERS"
+puts "Video cache: $VIDEO_CACHE_USERS"
+puts "Video total: $VIDEO_USERS"
+puts "Files cache: $FILES_CACHE_USERS"
+puts "Files total: $FILES_USERS"
+puts "-------------------------------------"
+
+# define the traffic according to: traffic distribution, cache hit rate
+# we go over all cfg_(NUM_OF_CLIENTS) users
+# since end users are saved in an array, we need to find the correct index of start / end of each traffic group
+# each group index starts from the last group index and ends at group size index
 
 # define web users
 set startIndex 0
 set first 0
 set last [expr {$first+$WEB_USERS}]
+# counter for cache group size
+set usersHitRateCount 0 
 for { set i $first} { $i<$last } {incr i} {
-   puts "web: $i"
-   set paretoWebClient($i) [createParetoFlow $ns $UE($i) $server $cfg_(WEB_BURST_TIME) $cfg_(WEB_PACKET_SIZE) $cfg_(WEB_IDLE_TIME) $cfg_(WEB_RATE) $cfg_(WEB_SHAPE) 1 $i]  
-   $ns at 0.0 "$paretoWebClient($i) start"			
+	# cache scenario
+	if {$cfg_(CACHE) == true && $usersHitRateCount < $WEB_CACHE_USERS} {
+		# create traffic until eNB to simulate cache
+		puts "web with cache: $i"
+		set paretoWebClient($i) [createParetoFlow $ns $UE($i) $eNB $cfg_(WEB_BURST_TIME) $cfg_(WEB_PACKET_SIZE) $cfg_(WEB_IDLE_TIME) $cfg_(WEB_RATE) $cfg_(WEB_SHAPE) 1 $i]  		
+	} else {
+		puts "web without cache: $i"
+		set paretoWebClient($i) [createParetoFlow $ns $UE($i) $server $cfg_(WEB_BURST_TIME) $cfg_(WEB_PACKET_SIZE) $cfg_(WEB_IDLE_TIME) $cfg_(WEB_RATE) $cfg_(WEB_SHAPE) 2 $i]	  		
+	}
+	$ns at 0.0 "$paretoWebClient($i) start"			
+	incr usersHitRateCount
+   
 }
 # define video users
 set first $last
 set last [expr {$last+$VIDEO_USERS}]
+# counter for cache group size
+set usersHitRateCount 0  
 for { set i $first} { $i<$last } {incr i} {
-   puts "videp: $i"	
-   set paretoVideoClient($i) [createParetoFlow $ns $UE($i) $server $cfg_(VIDEO_BURST_TIME) $cfg_(VIDEO_PACKET_SIZE) $cfg_(VIDEO_IDLE_TIME) $cfg_(VIDEO_RATE) $cfg_(VIDEO_SHAPE) 2 $i]
-   $ns at 0.0 "$paretoVideoClient($i) start"	 			
+	if {$cfg_(CACHE) == true && $usersHitRateCount < $VIDEO_CACHE_USERS} {
+		# create traffic until eNB to simulate cache
+		puts "video with cache: $i"
+		set paretoVideoClient($i) [createParetoFlow $ns $UE($i) $eNB $cfg_(VIDEO_BURST_TIME) $cfg_(VIDEO_PACKET_SIZE) $cfg_(VIDEO_IDLE_TIME) $cfg_(VIDEO_RATE) $cfg_(VIDEO_SHAPE) 3 $i]	
+	} else {
+		puts "video without cache: $i"
+		set paretoVideoClient($i) [createParetoFlow $ns $UE($i) $server $cfg_(VIDEO_BURST_TIME) $cfg_(VIDEO_PACKET_SIZE) $cfg_(VIDEO_IDLE_TIME) $cfg_(VIDEO_RATE) $cfg_(VIDEO_SHAPE) 4 $i]
+	}
+	$ns at 0.0 "$paretoVideoClient($i) start"
+	incr usersHitRateCount	 			
 }
 # define files users
 set first $last
 set last [expr {$last+$FILES_USERS}]
+# counter for cache group size
+set usersHitRateCount 0 
 for { set i $first} { $i<$last } {incr i} {
-    puts "files: $i"	
-    set paretoFilesClient($i) [createParetoFlow $ns $UE($i) $server $cfg_(FILES_BURST_TIME) $cfg_(FILES_PACKET_SIZE) $cfg_(FILES_IDLE_TIME) $cfg_(FILES_RATE) $cfg_(FILES_SHAPE) 3 $i]
-    $ns at 0.0 "$paretoFilesClient($i) start" 				 				
+	if {$cfg_(CACHE) == true && $usersHitRateCount < $FILES_CACHE_USERS} {
+		# create traffic until eNB to simulate cache
+		puts "files with cache: $i"	
+		set paretoFilesClient($i) [createParetoFlow $ns $UE($i) $eNB $cfg_(FILES_BURST_TIME) $cfg_(FILES_PACKET_SIZE) $cfg_(FILES_IDLE_TIME) $cfg_(FILES_RATE) $cfg_(FILES_SHAPE) 5 $i]
+	} else {
+		puts "files without cache: $i"
+		set paretoFilesClient($i) [createParetoFlow $ns $UE($i) $server $cfg_(FILES_BURST_TIME) $cfg_(FILES_PACKET_SIZE) $cfg_(FILES_IDLE_TIME) $cfg_(FILES_RATE) $cfg_(FILES_SHAPE) 6 $i]
+	}
+	$ns at 0.0 "$paretoFilesClient($i) start"
+	incr usersHitRateCount 				 				
 }
 # define voip users
 set first $last
 set last [expr {$last+$VOIP_USERS}]
 for { set i $first} { $i<$last } {incr i} {
-    puts "voip: $i"
-   set cbrVoipClient($i) [createCbrFlow $ns $UE($i) $server $cfg_(VOIP_PACKET_SIZE) $cfg_(VOIP_MAX_PACKETS)  $cfg_(VOIP_RATE) $cfg_(VOIP_INTERVAL) 5 $i]
+   puts "voip: $i"
+   set cbrVoipClient($i) [createCbrFlow $ns $UE($i) $server $cfg_(VOIP_PACKET_SIZE)  $cfg_(VOIP_RATE) 7 $i]
    $ns at 0.0 "$cbrVoipClient($i) start" 			 			
 }
 
 
 #Finish the simulation at 3.0 sec
-$ns at 10.0 "finish"
+$ns at $cfg_(SIMULATION_TIME) "finish"
 
 proc finish {} {
 	global ns f nf

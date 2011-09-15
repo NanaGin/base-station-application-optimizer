@@ -53,7 +53,7 @@ proc createParetoFlow {ns src dst burst size idle rate shape fid i} {
 }
 
 # format: set cbr($k) [createCbrFlow ns src dst size maxPackets rate interval color i]
-proc createCbrFlow {ns src dst size maxPackets rate interval fid i} {
+proc createCbrFlow {ns src dst size rate fid i} {
 	#Setup a UDP connection 
 	set udp($i) [new Agent/UDP]
 	$udp($i) set class_ 1 
@@ -68,8 +68,6 @@ proc createCbrFlow {ns src dst size maxPackets rate interval fid i} {
 	$c($i) attach-agent $udp($i)
 	$c($i) set type_ CBR 
 	$c($i) set packet_size_ $size
-	$c($i) set maxpkts_ $maxPackets
-	$c($i) set interval_ $interval 
 	$c($i) set rate_ $rate 
 	$c($i) set random_ false
 	return $c($i) 
