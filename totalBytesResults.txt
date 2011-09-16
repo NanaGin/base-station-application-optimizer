@@ -1,0 +1,20 @@
+30 minutes , 50 nodes, no cache
+
+Total number of bytes sent between eNB and SGW:2147483647
+Total web between eNB and SGW:495769560
+Total video between eNB and SGW:2147483647
+Total files between eNB and SGW:1248460440
+Total voip between eNB and SGW:110107200
+
+Total number of bytes sent between eNB and SGW:2147483647  with cache
+Total web between eNB and SGW:389918000
+Total video between eNB and SGW:2147483647
+Total files between eNB and SGW:751546680
+Total voip between eNB and SGW:125392800
+
+
+web - 32 %
+files - 40%
+video - same
+cbr - 13% more
+

@@ -1,5 +1,13 @@
 
 
+
+# this procedure calculates queue size for link between UE(i) and eNB
+# the sum of all links between UE to eNB should be 3 times more than cfg_(QUEUE_SIZE)
+proc calculateUserENBLinkQueueSize {} {
+	global cfg_ 
+	set cfg_(UE_QUEUE_SIZE) [expr {round(3*$cfg_(QUEUE_SIZE)/$cfg_(NUM_OF_CLIENTS)}]
+}
+
 # this procedure calculates the numbers of users that should use cache 
 # according to the traffic distribution and cache hit rate
 proc calculateHitRateUsersDistribution {} {
