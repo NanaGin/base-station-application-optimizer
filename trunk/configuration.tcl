@@ -3,12 +3,13 @@
 global cfg_  
 
 # simulation time
-set cfg_(SIMULATION_TIME) 10.0
-
+set cfg_(SIMULATION_TIME) 300.0
+set cfg_(TRACE_FILENAME) out.tr
 
 set cfg_(NUM_OF_CLIENTS) 10
 set cfg_(DROP_TAIL_BW) 10Mb
 set cfg_(DROP_TAIL_DELAY) 10ms
+set cfg_(DROP_TAIL_DELAY_SERVER) 150ms
 set cfg_(QUEUE_SIZE) 10
 set cfg_(TOPOLOGY_X) 5000
 set cfg_(TOPOLOGY_Y) 5000

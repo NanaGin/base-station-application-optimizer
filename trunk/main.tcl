@@ -6,7 +6,8 @@ source utilities.tcl
 
 # in case commande line parameters were provided, override default values from configuration.tcl file
 foreach { key value } $argv {
-	switch -- $key {	
+	switch -- $key {
+		-traceFile { set cfg_(TRACE_FILENAME) $value } 	
 		-nn   { set cfg_(NUM_OF_CLIENTS) $value }
 		-bw  { set cfg_(DROP_TAIL_BW) $value }
 		-dl  { set cfg_(DROP_TAIL_DELAY) $value }
@@ -29,9 +30,8 @@ set ns [new Simulator]
 
 
 #Open the trace file
-set f [open out.tr w]
+set f [open $cfg_(TRACE_FILENAME) w]
 $ns trace-all $f
-set httpLog [open "http.log" w]
 #add-packet-header IP TCP;
 #Trace set show_tcphdr_ 1;
 
@@ -64,6 +64,7 @@ puts "Video cache: $VIDEO_CACHE_USERS"
 puts "Video total: $VIDEO_USERS"
 puts "Files cache: $FILES_CACHE_USERS"
 puts "Files total: $FILES_USERS"
+puts "VOIP total: $VOIP_USERS"
 puts "-------------------------------------"
 
 # define the traffic according to: traffic distribution, cache hit rate
@@ -81,10 +82,10 @@ for { set i $first} { $i<$last } {incr i} {
 	# cache scenario
 	if {$cfg_(CACHE) == true && $usersHitRateCount < $WEB_CACHE_USERS} {
 		# create traffic until eNB to simulate cache
-		puts "web with cache: $i"
+		#puts "web with cache: $i"
 		set paretoWebClient($i) [createParetoFlow $ns $UE($i) $eNB $cfg_(WEB_BURST_TIME) $cfg_(WEB_PACKET_SIZE) $cfg_(WEB_IDLE_TIME) $cfg_(WEB_RATE) $cfg_(WEB_SHAPE) 1 $i]  		
 	} else {
-		puts "web without cache: $i"
+		#puts "web without cache: $i"
 		set paretoWebClient($i) [createParetoFlow $ns $UE($i) $server $cfg_(WEB_BURST_TIME) $cfg_(WEB_PACKET_SIZE) $cfg_(WEB_IDLE_TIME) $cfg_(WEB_RATE) $cfg_(WEB_SHAPE) 2 $i]	  		
 	}
 	$ns at 0.0 "$paretoWebClient($i) start"			
@@ -99,10 +100,10 @@ set usersHitRateCount 0
 for { set i $first} { $i<$last } {incr i} {
 	if {$cfg_(CACHE) == true && $usersHitRateCount < $VIDEO_CACHE_USERS} {
 		# create traffic until eNB to simulate cache
-		puts "video with cache: $i"
+		#puts "video with cache: $i"
 		set paretoVideoClient($i) [createParetoFlow $ns $UE($i) $eNB $cfg_(VIDEO_BURST_TIME) $cfg_(VIDEO_PACKET_SIZE) $cfg_(VIDEO_IDLE_TIME) $cfg_(VIDEO_RATE) $cfg_(VIDEO_SHAPE) 3 $i]	
 	} else {
-		puts "video without cache: $i"
+		#puts "video without cache: $i"
 		set paretoVideoClient($i) [createParetoFlow $ns $UE($i) $server $cfg_(VIDEO_BURST_TIME) $cfg_(VIDEO_PACKET_SIZE) $cfg_(VIDEO_IDLE_TIME) $cfg_(VIDEO_RATE) $cfg_(VIDEO_SHAPE) 4 $i]
 	}
 	$ns at 0.0 "$paretoVideoClient($i) start"
@@ -116,10 +117,10 @@ set usersHitRateCount 0
 for { set i $first} { $i<$last } {incr i} {
 	if {$cfg_(CACHE) == true && $usersHitRateCount < $FILES_CACHE_USERS} {
 		# create traffic until eNB to simulate cache
-		puts "files with cache: $i"	
+		#puts "files with cache: $i"	
 		set paretoFilesClient($i) [createParetoFlow $ns $UE($i) $eNB $cfg_(FILES_BURST_TIME) $cfg_(FILES_PACKET_SIZE) $cfg_(FILES_IDLE_TIME) $cfg_(FILES_RATE) $cfg_(FILES_SHAPE) 5 $i]
 	} else {
-		puts "files without cache: $i"
+		#puts "files without cache: $i"
 		set paretoFilesClient($i) [createParetoFlow $ns $UE($i) $server $cfg_(FILES_BURST_TIME) $cfg_(FILES_PACKET_SIZE) $cfg_(FILES_IDLE_TIME) $cfg_(FILES_RATE) $cfg_(FILES_SHAPE) 6 $i]
 	}
 	$ns at 0.0 "$paretoFilesClient($i) start"
@@ -129,7 +130,7 @@ for { set i $first} { $i<$last } {incr i} {
 set first $last
 set last [expr {$last+$VOIP_USERS}]
 for { set i $first} { $i<$last } {incr i} {
-   puts "voip: $i"
+   #puts "voip: $i"
    set cbrVoipClient($i) [createCbrFlow $ns $UE($i) $server $cfg_(VOIP_PACKET_SIZE)  $cfg_(VOIP_RATE) 7 $i]
    $ns at 0.0 "$cbrVoipClient($i) start" 			 			
 }

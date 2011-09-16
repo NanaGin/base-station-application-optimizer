@@ -44,7 +44,7 @@ proc createTopology {} {
 	$ns queue-limit $eNB $SGW $cfg_(QUEUE_SIZE)	
 	$ns duplex-link $SGW $GGW $cfg_(DROP_TAIL_BW) $cfg_(DROP_TAIL_DELAY) $cfg_(DROP_TAIL) 
 	$ns queue-limit $SGW $GGW $cfg_(QUEUE_SIZE)
-	$ns duplex-link $GGW $server $cfg_(DROP_TAIL_BW) $cfg_(DROP_TAIL_DELAY) $cfg_(DROP_TAIL) 
+	$ns duplex-link $GGW $server $cfg_(DROP_TAIL_BW) cfg_(DROP_TAIL_DELAY_SERVER) $cfg_(DROP_TAIL) 
 	$ns queue-limit $GGW $server $cfg_(QUEUE_SIZE)
 	
 	puts "Topology defined..."
