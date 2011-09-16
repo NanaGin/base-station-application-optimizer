@@ -36,7 +36,7 @@ proc createTopology {} {
 	for { set i 0} {$i<$cfg_(NUM_OF_CLIENTS)} {incr i} {
 		$ns duplex-link $UE($i) $eNB $cfg_(DROP_TAIL_BW) $cfg_(DROP_TAIL_DELAY) $cfg_(DROP_TAIL) 
 		#set queue limit_
-		$ns queue-limit $UE($i) $eNB $cfg_(QUEUE_SIZE)
+		$ns queue-limit $UE($i) $eNB $cfg_(UE_QUEUE_SIZE)
 	}
 
 

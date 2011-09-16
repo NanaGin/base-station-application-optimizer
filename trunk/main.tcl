@@ -41,6 +41,10 @@ $ns namtrace-all $nf
 
 puts "Trace files opened..."
 
+# calculate queue size between UE to eNB
+calculateUserENBLinkQueueSize
+
+puts $cfg_(UE_QUEUE_SIZE)
 
 # create Topology - createTopology uses the file produced by initialTopology
 createTopology

@@ -27,7 +27,6 @@
 #        maximum number of packets to send. 
 
 
-
 # format: set pareto($k) [createParetoFlow ns src dst burst size idle rate shape color]
 proc createParetoFlow {ns src dst burst size idle rate shape fid i} {	
 	#Setup a TCP connection
