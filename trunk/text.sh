@@ -9,7 +9,8 @@ cbrSumBytes=0
 
 inputFile=$1
 echo $inputFile
-webSumBytes=`more $inputFile | awk '{if ($3==0 && $4==1 && ($8==1 || $8==2)) print($6)}' | xargs | tr ' ' + | bc`
+webSumBytes=`more $inputFile | awk '{if ($3==0 && $4==1 && ($8==1 || $8==2)) print($6)}' | xargs | tr ' ' + | bc `
+# as long as the string contains spaces we need to replace them with + and add
 videoSumBytes=`more $inputFile | awk '{if ($3==0 && $4==1 && ($8==3 || $8==4)) print($6)}' | xargs | tr ' ' + | bc`
 filesSumBytes=`more $inputFile | awk '{if ($3==0 && $4==1 && ($8==5 || $8==6)) print($6)}' | xargs | tr ' ' + | bc`
 cbrSumBytes=`more $inputFile | awk '{if ($3==0 && $4==1 && $8==7) print($6)}' | xargs | tr ' ' + | bc`
