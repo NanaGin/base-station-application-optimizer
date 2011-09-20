@@ -5,7 +5,7 @@
 # the sum of all links between UE to eNB should be 3 times more than cfg_(QUEUE_SIZE)
 proc calculateUserENBLinkQueueSize {} {
 	global cfg_ 
-	set cfg_(UE_QUEUE_SIZE) [expr {round(3*$cfg_(QUEUE_SIZE)/$cfg_(NUM_OF_CLIENTS)}]
+	set cfg_(QUEUE_SIZE) [expr {ceil($cfg_(UE_QUEUE_SIZE)*$cfg_(NUM_OF_CLIENTS)/3)}]
 }
 
 # this procedure calculates the numbers of users that should use cache 

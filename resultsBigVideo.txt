@@ -1,0 +1,44 @@
+5 users , 1800 sec , no cache
+
+Total number of bytes sent between eNB and SGW:847808600
+Total web between eNB and SGW:35543160
+Total video between eNB and SGW:651549840
+Total files between eNB and SGW:160715600
+Total voip between eNB and SGW:0
+
+5 users , 1800 sec, with cache
+
+Total number of bytes sent between eNB and SGW:392331920
+Total web between eNB and SGW:0
+Total video between eNB and SGW:313117080
+Total files between eNB and SGW:79214840
+Total voip between eNB and SGW:0
+
+
+10 users, 1800 sec, no cache , each user queue is 10 and the queue between eNB - GW is 33
+Total number of bytes sent between eNB and SGW:1719141320
+Total web between eNB and SGW:96932400
+Total video between eNB and SGW:1340023840
+Total files between eNB and SGW:238985080
+Total voip between eNB and SGW:43200000
+
+
+10 users, 1800 sec, with cache , each user queue is 10 and the queue between eNB - GW is 33
+Total number of bytes sent between eNB and SGW:828215360
+Total web between eNB and SGW:50469240
+Total video between eNB and SGW:655360400
+Total files between eNB and SGW:79185720
+Total voip between eNB and SGW:43200000
+
+web - 47%
+video - 51%
+files - 66%
+
+
+20 users , 1800 sec, with cache
+Total number of bytes sent between eNB and SGW:1713842760
+Total web between eNB and SGW:158103360
+Total video between eNB and SGW:1274847040
+Total files between eNB and SGW:237692360
+Total voip between eNB and SGW:43200000
+
