@@ -7,30 +7,13 @@ videoSumBytes=0
 filesSumBytes=0
 cbrSumBytes=0
 
- more out.tr | awk '{if ($3==0 && $4==1 && $8==7) print($6)}' | xargs | tr ' ' + | bc
-
-while read line ;do
-	from=`echo $line | awk '{print $3}'`
-	to=`echo $line | awk '{print $4}'`
-	pktsize=`echo $line | awk '{print $6}'`	
-	flow_id=`echo $line | awk '{print $8}'`
-
-	if [ "$from" -eq 0 ] && [ "$to" -eq 1 ]; then
-
-		if [ "$flow_id" -eq 1 ] || [ "$flow_id" -eq 2 ]; then		
-			webSumBytes=`echo $webSumBytes + $pktsize | bc`
-		elif [ "$flow_id" -eq 3 ] || [ "$flow_id" -eq 4 ]; then		
-			videoSumBytes=`echo $videoSumBytes + $pktsize | bc`
-		elif [ "$flow_id" -eq 5 ] || [ "$flow_id" -eq 6 ]; then		
-			filesSumBytes=`echo $filesSumBytes + $pktsize | bc`
-		elif [ "$flow_id" -eq 7 ]; then
-			cbrSumBytes=`echo $cbrSumBytes + $pktsize | bc`
-		fi 
-
-	    totalSumBytes=`echo $totalSumBytes + $pktsize | bc`
-	fi	
-done < $1
-
+inputFile=$1
+echo $inputFile
+webSumBytes=`more $inputFile | awk '{if ($3==0 && $4==1 && ($8==1 || $8==2)) print($6)}' | xargs | tr ' ' + | bc`
+videoSumBytes=`more $inputFile | awk '{if ($3==0 && $4==1 && ($8==3 || $8==4)) print($6)}' | xargs | tr ' ' + | bc`
+filesSumBytes=`more $inputFile | awk '{if ($3==0 && $4==1 && ($8==5 || $8==6)) print($6)}' | xargs | tr ' ' + | bc`
+cbrSumBytes=`more $inputFile | awk '{if ($3==0 && $4==1 && $8==7) print($6)}' | xargs | tr ' ' + | bc`
+totalSumBytes=`echo $webSumBytes + $videoSumBytes + $filesSumBytes + $cbrSumBytes | bc`
 
 echo Total number of bytes sent between eNB and SGW: $totalSumBytes
 echo Total web between eNB and SGW: $webSumBytes
