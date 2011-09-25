@@ -3,7 +3,7 @@
 global cfg_  
 
 # simulation time
-set cfg_(SIMULATION_TIME) 1800.0
+set cfg_(SIMULATION_TIME) 20.0
 set cfg_(TRACE_FILENAME) out.tr
 
 set cfg_(NUM_OF_CLIENTS) 10
