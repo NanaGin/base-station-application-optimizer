@@ -14,7 +14,6 @@
 # 6 files no cache
 # 7 cbr
 
-#!/usr/bin/perl
 
 BEGIN {
 
@@ -50,7 +49,7 @@ BEGIN {
    packet_id = $12;
 
 
-
+  	
         if (from==0 && to==1 ) {
 		if (flow_id == 1 || flow_id == 2) {
 			webSumBytes = webSumBytes + pktsize;
@@ -65,9 +64,6 @@ BEGIN {
 			cbrSumBytes = cbrSumBytes + pktsize;
 		}
 		totalSumBytes = totalSumBytes + pktsize;
-#		eval $totalSumBytes
-
-		#totalSumBytes = `echo $totalSumBytes + $pktsize | bc`;
 	}
 }
 
