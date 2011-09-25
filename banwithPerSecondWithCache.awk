@@ -1,17 +1,17 @@
 #This program is used to calculate total bandwith per traffic per second
 
-#awk  –f  bandwithPerSecond.awk  out.tr nodes=nodesNumber
+#awk  –f  bandwithPerSecond.awk  out.tr nodes=NumberOfNodes
 
 BEGIN {
 	
 	nodes = ARGV[2];
 	# create filenames according to input parameters
-	webFilename=nodes "_webTraffic.txt";
-	videoFilename=nodes "_video.txt";
-	filesFilename=nodes "_files.txt";
-	cbrFilename=nodes "_cbr.txt";
-	totalFilename=nodes "_total.txt";
-		
+	webFilename=nodes "_cache_webTraffic.txt";
+	videoFilename=nodes "_cache_video.txt";
+	filesFilename=nodes "_cache_files.txt";
+	cbrFilename=nodes "_cache_cbr.txt";
+	totalFilename=nodes "_cache_total.txt";
+
 	for (i=0; i<=1800; i++) {
 		web[i]=0;
 		video[i]=0;
@@ -58,5 +58,5 @@ END {
 		printf("%d\n", files[i]) >> "bytesPerSecond/" filesFilename
 		printf("%d\n", cbr[i]) >> "bytesPerSecond/" cbrFilename
 		printf("%d\n", total[i]) >> "bytesPerSecond/" totalFilename
-}	
+	}
 }
