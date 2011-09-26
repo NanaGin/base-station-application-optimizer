@@ -2,7 +2,7 @@
 
 # jitter ＝((recvtime(j)-sendtime(j))-(recvtime(i)-sendtime(i)))/(j-i),  j > i
 
-# $gawk  –f  measure-jitter.awk  out.tr 
+ 
 
 BEGIN {
 
@@ -60,9 +60,9 @@ BEGIN {
 
  
 
-#Record the receiving time for CBR (flow_id=7)
+#Record the receiving time for CBR (flow_id=2)
 
-   if ( flow_id == 7 && action != "d" ) {
+   if ( flow_id == 2 && action != "d" ) {
 
       if ( action == "r" ) {
 
