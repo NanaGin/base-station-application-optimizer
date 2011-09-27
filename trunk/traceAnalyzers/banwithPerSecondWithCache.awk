@@ -34,7 +34,7 @@ BEGIN {
 
 
 
-        if (from==0 && to==1 ) {
+        if ((from==0 && to==1) || (from==1 && to==0)) {
 		secIndex=sprintf("%d",time);
 		if (flow_id == 1 || flow_id == 2) {			
 			web[secIndex] = web[secIndex] + pktsize;
@@ -53,10 +53,10 @@ BEGIN {
 }	
 END {
  	for (i=0; i<=1800; i++) {
-		printf("%d\n", web[i]) >> "bytesPerSecond/" webFilename
-		printf("%d\n", video[i]) >> "bytesPerSecond/" videoFilename
-		printf("%d\n", files[i]) >> "bytesPerSecond/" filesFilename
-		printf("%d\n", cbr[i]) >> "bytesPerSecond/" cbrFilename
-		printf("%d\n", total[i]) >> "bytesPerSecond/" totalFilename
+		printf("%d\n", web[i]) >> "/media/LENOVO/nana/bytesPerSecond/" webFilename
+		printf("%d\n", video[i]) >> "/media/LENOVO/nana/bytesPerSecond/" videoFilename
+		printf("%d\n", files[i]) >> "/media/LENOVO/nana/bytesPerSecond/" filesFilename
+		printf("%d\n", cbr[i]) >> "/media/LENOVO/nana/bytesPerSecond/" cbrFilename
+		printf("%d\n", total[i]) >> "/media/LENOVO/nana/bytesPerSecond/" totalFilename
 	}
 }
