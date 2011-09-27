@@ -10,16 +10,16 @@ cbrSumBytes=0
 
 inputFile=$1
 echo $inputFile
-webSumBytes=`more $inputFile | awk '{if ($3==0 && $4==1 && ($8==1 || $8==2)) printf("%d+",$6)}'`
+webSumBytes=`more $inputFile | awk '{if ((($3==0 && $4==1) || ($3==1 && $4==0))  && ($8==1 || $8==2)) printf("%d+",$6)}'`
 tempWebSumBytes=`echo $webSumBytes 0`
 webSumBytes=`echo $tempWebSumBytes | bc`
-videoSumBytes=`more $inputFile | awk '{if ($3==0 && $4==1 && ($8==3 || $8==4)) printf("%d+",$6)}'`
+videoSumBytes=`more $inputFile | awk '{if ((($3==0 && $4==1) || ($3==1 && $4==0)) && ($8==3 || $8==4)) printf("%d+",$6)}'`
 tempVideoSumBytes=`echo $videoSumBytes 0`
 videoSumBytes=`echo $tempVideoSumBytes | bc`
-filesSumBytes=`more $inputFile | awk '{if ($3==0 && $4==1 && ($8==5 || $8==6)) printf("%d+",$6)}'`
+filesSumBytes=`more $inputFile | awk '{if ((($3==0 && $4==1) || ($3==1 && $4==0)) && ($8==5 || $8==6)) printf("%d+",$6)}'`
 tempFilesSumBytes=`echo $filesSumBytes 0`
 filesSumBytes=`echo $tempFilesSumBytes | bc`
-cbrSumBytes=`more $inputFile | awk '{if ($3==0 && $4==1 && $8==7) printf("%d+",$6)}'`
+cbrSumBytes=`more $inputFile | awk '{if ((($3==0 && $4==1) || ($3==1 && $4==0)) && $8==7) printf("%d+",$6)}'`
 tempCbrSumBytes=`echo $cbrSumBytes 0`
 cbrSumBytes=`echo $tempCbrSumBytes | bc`
 totalSumBytes=`echo $webSumBytes + $videoSumBytes + $filesSumBytes + $cbrSumBytes | bc`
