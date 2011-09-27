@@ -31,12 +31,11 @@
 proc createParetoFlow {ns src dst burst size idle rate shape fid i} {	
 	#Setup a TCP connection
 	set tcp($i) [new Agent/TCP]
-	$tcp($i) set maxcwnd_ 16	
-	#$ns add-agent-trace $tcp($i) tcp
-	$tcp($i) set class_ 3 
-	$ns attach-agent $src $tcp($i)		
+	$tcp($i) set maxcwnd_ 16		
+	$tcp($i) set class_ 3 	
+	$ns attach-agent $dst $tcp($i)				
 	set sink($i) [new Agent/TCPSink] 
-	$ns attach-agent $dst $sink($i)  
+	$ns attach-agent $src $sink($i)    
 	$ns connect $tcp($i) $sink($i) 
 	$tcp($i)  set fid_ $fid 
 	
@@ -56,10 +55,10 @@ proc createCbrFlow {ns src dst size rate fid i} {
 	#Setup a UDP connection 
 	set udp($i) [new Agent/UDP]
 	$udp($i) set class_ 1 
-	$ns attach-agent $src $udp($i) 
+	$ns attach-agent $dst $udp($i)  
 	set null($i) [new Agent/Null] 
-	$ns attach-agent $dst $null($i) 
-	$ns connect $udp($i) $null($i) 
+	$ns attach-agent $src $null($i)  
+	$ns connect $null($i) $udp($i)  
 	$udp($i) set fid_ $fid 
 
 	#Setup a CBR traffic session over UDP connection 

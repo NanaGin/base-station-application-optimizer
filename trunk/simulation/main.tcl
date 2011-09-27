@@ -87,12 +87,15 @@ for { set i $first} { $i<$last } {incr i} {
 	if {$cfg_(CACHE) == true && $usersHitRateCount < $WEB_CACHE_USERS} {
 		# create traffic until eNB to simulate cache
 		#puts "web with cache: $i"
-		set paretoWebClient($i) [createParetoFlow $ns $UE($i) $eNB $cfg_(WEB_BURST_TIME) $cfg_(WEB_PACKET_SIZE) $cfg_(WEB_IDLE_TIME) $cfg_(WEB_RATE) $cfg_(WEB_SHAPE) 1 $i]  		
+		set paretoWebDownload($i) [createParetoFlow $ns $UE($i) $eNB $cfg_(WEB_BURST_TIME) $cfg_(WEB_PACKET_SIZE) $cfg_(WEB_IDLE_TIME) $cfg_(WEB_RATE) $cfg_(WEB_SHAPE) 1 $i]
+		set paretoWebUpload($i) [createParetoFlow $ns $eNB $UE($i) $cfg_(WEB_BURST_TIME) $cfg_(WEB_PACKET_SIZE) $cfg_(WEB_IDLE_TIME) $cfg_(WEB_RATE) $cfg_(WEB_SHAPE) 1 $i]  		
 	} else {
 		#puts "web without cache: $i"
-		set paretoWebClient($i) [createParetoFlow $ns $UE($i) $server $cfg_(WEB_BURST_TIME) $cfg_(WEB_PACKET_SIZE) $cfg_(WEB_IDLE_TIME) $cfg_(WEB_RATE) $cfg_(WEB_SHAPE) 2 $i]	  		
+		set paretoWebDownload($i) [createParetoFlow $ns $UE($i) $server $cfg_(WEB_BURST_TIME) $cfg_(WEB_PACKET_SIZE) $cfg_(WEB_IDLE_TIME) $cfg_(WEB_RATE) $cfg_(WEB_SHAPE) 2 $i]	  		
+		set paretoWebUpload($i) [createParetoFlow $ns $server $UE($i) $cfg_(WEB_BURST_TIME) $cfg_(WEB_PACKET_SIZE) $cfg_(WEB_IDLE_TIME) $cfg_(WEB_RATE) $cfg_(WEB_SHAPE) 2 $i]
 	}
-	$ns at 0.0 "$paretoWebClient($i) start"			
+	$ns at 0.0 "$paretoWebDownload($i) start"			
+	$ns at 0.0 "$paretoWebUpload($i) start"		
 	incr usersHitRateCount
    
 }
@@ -105,12 +108,15 @@ for { set i $first} { $i<$last } {incr i} {
 	if {$cfg_(CACHE) == true && $usersHitRateCount < $VIDEO_CACHE_USERS} {
 		# create traffic until eNB to simulate cache
 		#puts "video with cache: $i"
-		set paretoVideoClient($i) [createParetoFlow $ns $UE($i) $eNB $cfg_(VIDEO_BURST_TIME) $cfg_(VIDEO_PACKET_SIZE) $cfg_(VIDEO_IDLE_TIME) $cfg_(VIDEO_RATE) $cfg_(VIDEO_SHAPE) 3 $i]	
+		set paretoVideoDownload($i) [createParetoFlow $ns $UE($i) $eNB $cfg_(VIDEO_BURST_TIME) $cfg_(VIDEO_PACKET_SIZE) $cfg_(VIDEO_IDLE_TIME) $cfg_(VIDEO_RATE) $cfg_(VIDEO_SHAPE) 3 $i]
+		set paretoVideoUpload($i) [createParetoFlow $ns $eNB $UE($i) $cfg_(VIDEO_BURST_TIME) $cfg_(VIDEO_PACKET_SIZE) $cfg_(VIDEO_IDLE_TIME) $cfg_(VIDEO_RATE) $cfg_(VIDEO_SHAPE) 3 $i]		
 	} else {
 		#puts "video without cache: $i"
-		set paretoVideoClient($i) [createParetoFlow $ns $UE($i) $server $cfg_(VIDEO_BURST_TIME) $cfg_(VIDEO_PACKET_SIZE) $cfg_(VIDEO_IDLE_TIME) $cfg_(VIDEO_RATE) $cfg_(VIDEO_SHAPE) 4 $i]
+		set paretoVideoDownload($i) [createParetoFlow $ns $UE($i) $server $cfg_(VIDEO_BURST_TIME) $cfg_(VIDEO_PACKET_SIZE) $cfg_(VIDEO_IDLE_TIME) $cfg_(VIDEO_RATE) $cfg_(VIDEO_SHAPE) 4 $i]
+		set paretoVideoUpload($i) [createParetoFlow $ns $server $UE($i) $cfg_(VIDEO_BURST_TIME) $cfg_(VIDEO_PACKET_SIZE) $cfg_(VIDEO_IDLE_TIME) $cfg_(VIDEO_RATE) $cfg_(VIDEO_SHAPE) 4 $i]
 	}
-	$ns at 0.0 "$paretoVideoClient($i) start"
+	$ns at 0.0 "$paretoVideoDownload($i) start"
+	$ns at 0.0 "$paretoVideoUpload($i) start"
 	incr usersHitRateCount	 			
 }
 # define files users
@@ -122,12 +128,15 @@ for { set i $first} { $i<$last } {incr i} {
 	if {$cfg_(CACHE) == true && $usersHitRateCount < $FILES_CACHE_USERS} {
 		# create traffic until eNB to simulate cache
 		#puts "files with cache: $i"	
-		set paretoFilesClient($i) [createParetoFlow $ns $UE($i) $eNB $cfg_(FILES_BURST_TIME) $cfg_(FILES_PACKET_SIZE) $cfg_(FILES_IDLE_TIME) $cfg_(FILES_RATE) $cfg_(FILES_SHAPE) 5 $i]
+		set paretoFilesDownload($i) [createParetoFlow $ns $UE($i) $eNB $cfg_(FILES_BURST_TIME) $cfg_(FILES_PACKET_SIZE) $cfg_(FILES_IDLE_TIME) $cfg_(FILES_RATE) $cfg_(FILES_SHAPE) 5 $i]
+		set paretoFilesUpload($i) [createParetoFlow $ns $eNB $UE($i) $cfg_(FILES_BURST_TIME) $cfg_(FILES_PACKET_SIZE) $cfg_(FILES_IDLE_TIME) $cfg_(FILES_RATE) $cfg_(FILES_SHAPE) 5 $i]
 	} else {
 		#puts "files without cache: $i"
-		set paretoFilesClient($i) [createParetoFlow $ns $UE($i) $server $cfg_(FILES_BURST_TIME) $cfg_(FILES_PACKET_SIZE) $cfg_(FILES_IDLE_TIME) $cfg_(FILES_RATE) $cfg_(FILES_SHAPE) 6 $i]
+		set paretoFilesDownload($i) [createParetoFlow $ns $UE($i) $server $cfg_(FILES_BURST_TIME) $cfg_(FILES_PACKET_SIZE) $cfg_(FILES_IDLE_TIME) $cfg_(FILES_RATE) $cfg_(FILES_SHAPE) 6 $i]
+		set paretoFilesUpload($i) [createParetoFlow $ns $server $UE($i) $cfg_(FILES_BURST_TIME) $cfg_(FILES_PACKET_SIZE) $cfg_(FILES_IDLE_TIME) $cfg_(FILES_RATE) $cfg_(FILES_SHAPE) 6 $i]
 	}
-	$ns at 0.0 "$paretoFilesClient($i) start"
+	$ns at 0.0 "$paretoFilesDownload($i) start"
+	$ns at 0.0 "$paretoFilesUpload($i) start"
 	incr usersHitRateCount 				 				
 }
 # define voip users
@@ -135,8 +144,10 @@ set first $last
 set last [expr {$last+$VOIP_USERS}]
 for { set i $first} { $i<$last } {incr i} {
    #puts "voip: $i"
-   set cbrVoipClient($i) [createCbrFlow $ns $UE($i) $server $cfg_(VOIP_PACKET_SIZE)  $cfg_(VOIP_RATE) 7 $i]
-   $ns at 0.0 "$cbrVoipClient($i) start" 			 			
+   set cbrVoipDownload($i) [createCbrFlow $ns $UE($i) $server $cfg_(VOIP_PACKET_SIZE)  $cfg_(VOIP_RATE) 7 $i]
+   set cbrVoipUpload($i) [createCbrFlow $ns $server $UE($i) $cfg_(VOIP_PACKET_SIZE)  $cfg_(VOIP_RATE) 7 $i]
+   $ns at 0.0 "$cbrVoipDownload($i) start"
+   $ns at 0.0 "$cbrVoipUpload($i) start" 			 			 			 			
 }
 
 
