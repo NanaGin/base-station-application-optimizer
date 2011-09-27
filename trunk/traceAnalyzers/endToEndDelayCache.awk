@@ -170,4 +170,65 @@ END {
 	printf("VOIP Packets Received: %d\n", cbr_total_packets_received) >> "../delay/" totalFilename
 	printf("VOIP Packets Dropped: %d\n", cbr_total_packets_dropped) >> "../delay/" totalFilename
 
+		# print web statistics
+	numPackets=0;
+	avg=0;    
+	for ( var in web_start_time ) {		
+		start = web_start_time[var];
+ 		end = web_end_time[var];
+		if (start != 0 && end > start) {
+			packet_duration = end - start;
+			numPackets=numPackets + 1;
+			avg=avg + packet_duration;
+			printf("%s %s\n",start,packet_duration) >> "../delay/" webFilename
+		} 
+	}
+	printf("Web with cache average delay: %s",avg / numPackets) >> "../delay/" webFilename
+
+	# print video statistics
+	numPackets=0;
+	avg=0;    
+	for ( var in video_start_time ) {		
+		start = video_start_time[var];
+ 		end = video_end_time[var];
+		if (start != 0 && end > start) {
+			packet_duration = end - start;
+			numPackets=numPackets + 1;
+			avg=avg + packet_duration;
+			printf("%s %s\n",start,packet_duration) >> "../delay/" videoFilename
+		} 
+	}
+	printf("Video with cache average delay: %s",avg / numPackets) >> "../delay/" videoFilename
+
+	# print files statistics
+	numPackets=0;
+	avg=0;    
+	for ( var in files_start_time ) {		
+		start = files_start_time[var];
+ 		end = files_end_time[var];
+		if (start != 0 && end > start) {
+			packet_duration = end - start;
+			numPackets=numPackets + 1;
+			avg=avg + packet_duration;
+			printf("%s %s\n",start,packet_duration) >> "../delay/" filesFilename
+		} 
+	}
+	printf("Files with cache average delay: %s",avg / numPackets) >> "../delay/" filesFilename
+
+	# print voip statistics
+	numPackets=0;
+	avg=0;    
+	for ( var in cbr_start_time ) {		
+		start = cbr_start_time[var];
+ 		end = cbr_end_time[var];
+		if (start != 0 && end > start) {
+			packet_duration = end - start;
+			numPackets=numPackets + 1;
+			avg=avg + packet_duration;
+			printf("%s %s\n",start,packet_duration) >> "../delay/" cbrFilename
+		} 
+	}
+	printf("VOIP with cache average delay: %s",avg / numPackets) >> "../delay/" cbrFilename
+
+
 }
